@@ -113,6 +113,13 @@ flyctl auth login
 flyctl launch
 ```
 
+:::tips
+Windows で `Error name argument or flag must be specified when not running interactively` というメッセージが出る場合は、次のいずれかの方法で回避できます。
+
+- [Windows ターミナル](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701) をインストールして、Windows ターミナルから PowerShell を起動して実行する。
+- WSL を利用する。
+:::
+
 `App Name (leave blank to use an auto-generated name)`というメッセージが表示されるので好きな App Name を入力します。自動生成でよければ空白でも構いません。
 
 `Select region`というメッセージが表示されます。API サーバーをデプロイする地域を設定します。よくわからない場合は、`nrt (Tokyo, Japan)`で構いません[^3]。
