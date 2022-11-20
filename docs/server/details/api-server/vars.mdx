@@ -158,7 +158,7 @@ bcrypt のハッシュ値は様々な方法で生成できます。どの方法�
 - [https://tools.flocon.app/bcrypt](https://tools.flocon.app/bcrypt) で生成する。最も手軽ですが、このページには [npm の bcryptjs パッケージ](https://www.npmjs.com/package/bcryptjs) を使っているため、API サーバーに使用している [bcrypt パッケージ](https://www.npmjs.com/package/bcrypt)では認識できないハッシュ値が生成される可能性があります。その場合は、日本語などを用いない、もしくはパスワードを短くすることで解決できる可能性があります。
 - [Flocon のソースコード](https://github.com/flocon-trpg/servers)に付属している`bcrypt-interactive`スクリプトを利用する。`apps/api-server`ディレクトリで `yarn run bcrypt-interactive`を実行すると、bcrypt ハッシュ値生成プログラムが起動します。[bcrypt パッケージ](https://www.npmjs.com/package/bcrypt) が使われますが、事前に Node.js と yarn のインストールおよび、`yarn install` コマンドを実行して数百 MB のファイルをダウンロードする必要があります。
 
-## FIREBASE_ADMIN_SECRET (任意){#FIREBASE_ADMIN_SECRET}
+## FIREBASE_ADMIN_SECRET (省略可){#FIREBASE_ADMIN_SECRET}
 
 :::info
 2022 年 8 月頃までこの設定は必須と書かれていましたが、確認したところ実際は必要ないことが判明しました。よって、**`FIREBASE_ADMIN_SECRET` の設定の有無は現時点では Flocon の動作に影響を及ぼさないと考えられるため、設定する必要はありません。**すでに `FIREBASE_ADMIN_SECRET` に値をセットしている場合は、値を削除しても構いません。同様に、Firebase Admin SDK の秘密鍵ファイルの生成も行う必要はありません。
@@ -201,6 +201,45 @@ API サーバー v0.7.2 の時点では、管理者には部屋一覧を表示�
 
 <Example keyName="FLOCON_ADMIN" value="abcDEFghiJKL123,MNOpqrSTUvwx456" />
 
+## FIREBASE_PROJECTID (省略可) (v0.7.10 で追加) {#FIREBASE_PROJECTID}
+
+[FIREBASE_PROJECT_ID](#FIREBASE_PROJECT_ID) をご覧ください。
+
+## FIREBASE_PROJECT_ID (省略可) (v0.7.11 で追加) {#FIREBASE_PROJECT_ID}
+
+利用する Firebase プロジェクトの ID を設定できます。 
+
+API サーバー v0.7.11 以上では、`FIREBASE_PROJECT_ID` と `FIREBASE_PROJECTID` のいずれかを利用することができます。どちらを同じ動作をします。v0.7.10 では `FIREBASE_PROJECTID` のみが利用できます。
+
+:::info
+[`FIREBASE_ADMIN_SECRET`](#FIREBASE_ADMIN_SECRET) を設定しない場合は、`FIREBASE_PROJECT_ID` と `FIREBASE_PROJECTID` のいずれかを必ず設定する必要があります。
+:::
+
+### プロジェクト ID の取得方法
+
+Firebase の設定情報にアクセスします。
+
+![1.png](/img/docs/firebase-config/1.png)
+
+このページの下部に、下のように`const firebaseConfig = {`で始まるコードがあります。この中から`projectId:`で始まる行を探し、その右の文字列を確認します。下の例ですと`"my-firebase-project-id"`が該当します。
+
+```javascript
+const firebaseConfig = {
+  apiKey: "*************",
+  authDomain: "*****.firebaseapp.com",
+  databaseURL: "https://*****.firebaseio.com",
+  projectId: "my-firebase-project-id",
+  storageBucket: "*****",
+  messagingSenderId: "*****",
+  appId: "************",
+  measurementId: "*****",
+};
+```
+
+### 入力例
+
+<Example keyName="FIREBASE_PROJECT_ID" value="my-firebase-project-id" />
+
 ## HEROKU (省略可) {#HEROKU}
 
 `true` をセットすることで、Heroku に適したモードで API サーバーが稼働します。具体的には、次のような挙動になります。
@@ -215,7 +254,7 @@ API サーバー v0.7.2 の時点では、管理者には部屋一覧を表示�
 `json` もしくは `pino` をセットすることで、代わりに [pino](https://www.npmjs.com/package/pino) の JSON の形式でログが出力されます。また、API 実行に関わるログが出力されるようにもなります。API 実行に関わるログは大量に出力されますのでご注意ください。`json` と `pino` はどちらも同じ動作をします。
 
 :::tip
-JSON 形式のログは、[pino-pretty](https://www.npmjs.com/package/pino-pretty) を使うことで人が読みやすい形に変換できます。使い方は、まず `npm install -g pino-pretty` でインストールしてから、`yarn run start | pino-pretty` などのように組み合わせます[^1]。pino のモジュールには pino-pretty 以外にも様々なものが存在します。
+JSON 形式のログは、[pino-pretty](https://www.npmjs.com/package/pino-pretty) を使うことで人間が読みやすい形に変換できます。使い方は、まず `npm install -g pino-pretty` でインストールしてから、`yarn run start | pino-pretty` などのように組み合わせます[^1]。pino のモジュールには pino-pretty 以外にも様々なものが存在します。
 :::
 
 ### 入力例
@@ -224,19 +263,19 @@ JSON 形式のログは、[pino-pretty](https://www.npmjs.com/package/pino-prett
 
 ## LOG_LEVEL (省略可) (v0.7.10 で追加){#LOG_LEVEL}
 
-出力するログのレベルを設定します。`fatal`、`error`、`warn`、`info`、`debug`、`trace`、`silent` のいずれかの値をセットできます。値がセットされていない場合は `info` がセットされたときと同じ動作をします。
+出力するログのレベルを設定できます。`fatal`、`error`、`warn`、`info`、`debug`、`trace`、`silent` のいずれかの値をセットできます。値がセットされていない場合は `info` がセットされたときと同じ動作をします。
 
-`silent` の場合、一切のログ出力を行いません。`silent` 以外の場合は、セットされたレベル以上のログのみを出力します。例えば `warn` をセットした場合、`fatal`、`warn`、`info` のレベルのログのみが出力されます。
+`silent` の場合、一切のログ出力を行いません。`silent` 以外の場合は、セットされたレベル以上のログのみを出力します。例えば `warn` をセットした場合、`fatal`、`error`、`warn` のレベルのログのみが出力されます。
 
 :::note
-API 実行に関わるログは、`LOG_LEVEL` の値に関わらず、[`LOG_FORMAT`](#LOG_FORMAT) を `json` などにしない限り出力されません。
+API の実行に関わるログは、`LOG_LEVEL` の値に関わらず、[`LOG_FORMAT`](#LOG_FORMAT) を `json` などにしない限り出力されません。
 :::
 
 ### 入力例
 
 <Example keyName="LOG_LEVEL" value="warn" />
 
-## MySQL (省略可)(v0.7.2 で追加){#MYSQL}
+## MySQL (省略可) (v0.7.2 で追加){#MYSQL}
 
 MySQL の設定を行うことができます。
 

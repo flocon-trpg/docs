@@ -66,3 +66,21 @@ Firebase Storage 版アップローダーを有効化する場合は `true` を�
 <Example
 keyName='NEXT_PUBLIC_FIREBASE_STORAGE_ENABLED'
 value='true' />
+
+## NEXT_PUBLIC_LOG_LEVEL (省略可) (v0.8.4 で追加)
+
+出力するログのレベルを設定できます。`fatal`、`error`、`warn`、`info`、`debug`、`trace`、`silent` のいずれかの値をセットできます。値がセットされていない場合は `info` がセットされたときと同じ動作をします。
+
+`silent` の場合、一切のログ出力を行いません。`silent` 以外の場合は、セットされたレベル以上のログのみを出力します。例えば `warn` をセットした場合、`fatal`、`error`、`warn` のレベルのログのみが出力されます。
+
+ログはブラウザに出力されます。
+
+:::tip
+`debug` や `trace` は [console.debug](https://developer.mozilla.org/ja/docs/Web/API/console/debug) メソッドで出力されますが、Chrome などでは初期状態では表示されません。表示されない場合はブラウザの設定等を確認してください。
+:::
+
+### 入力例
+
+<Example
+keyName='NEXT_PUBLIC_LOG_LEVEL'
+value='debug' />

@@ -224,9 +224,9 @@ PORT="8080"
 AUTO_MIGRATION="true"
 ```
 
-#### FIREBASE_PROJECTID
+#### FIREBASE_PROJECT_ID
 
-`FIREBASE_PROJECTID`は、Firebase の設定情報に書かれています。まずは Firebase の設定情報にアクセスします。
+`FIREBASE_PROJECT_ID`は、Firebase の設定情報に書かれています。まずは Firebase の設定情報にアクセスします。
 
 ![1.png](/img/docs/firebase-config/1.png)
 
