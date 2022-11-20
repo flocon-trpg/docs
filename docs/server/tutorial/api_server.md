@@ -113,7 +113,7 @@ flyctl auth login
 flyctl launch
 ```
 
-:::tips
+:::tip
 Windows で `Error name argument or flag must be specified when not running interactively` というメッセージが出る場合は、次のいずれかの方法で回避できます。
 
 - [Windows ターミナル](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701) をインストールして、Windows ターミナルから PowerShell を起動して実行する。
