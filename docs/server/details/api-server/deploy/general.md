@@ -33,6 +33,12 @@ $ npm --version
 $ npm install -g yarn
 ```
 
+<!--
+:::note
+このコマンドによりインストールされる yarn のバージョンは v1 です。Flocon には yarn v3 が採用されていますが、yarn v3 を別途インストールする必要はありません。Flocon のディレクトリ内で yarn を実行すると、yarn v3 のコードが自動的にロードされ、v3 として動作します(`yarn --version` の実行結果が、Flocon のディレクトリ内外で異なることからも確認できます)。これは Flocon 独自の機能ではなく、yarn v2 以上では一般的な挙動です。
+:::
+-->
+
 :::note
 Flocon は yarn のみに対応しています。npm や pnpm などには対応していません。
 :::
@@ -65,11 +71,15 @@ $ yarn workspaces focus
 `yarn workspaces focus` の代わりに `yarn install` を実行しても構いません。ただし、`yarn install` の場合は Web サーバーのみに使用される npm パッケージもインストールされるため、ストレージの使用量が増加します。
 :::
 
+:::tip
+[`.yarnrc.yml`](https://github.com/flocon-trpg/servers/blob/main/.yarnrc.yml) ファイルを編集して yarn PnP モードを有効化することで、ストレージの消費量を節約することもできます。設定は `yarn workspaces focus` もしくは `yarn install` を実行することで反映されます。 
+:::
+
 :::info
 v0.7.10 以前では npm パッケージのインストールの次に `yarn run build` を実行する必要がありましたが、v0.7.11 以降ではビルドされたファイルが付属するようになったため実行する必要はなくなりました。
 :::
 
-`servers/apps/api-server`フォルダ内に`.env.local` ファイルを作成して、[環境変数](../vars)のページを参照して API サーバーの設定情報を入力して保存します。
+`servers/apps/api-server`ディレクトリ内に`.env.local` ファイルを作成して、[環境変数](../vars)のページを参照して API サーバーの設定情報を入力して保存します。
 
 API サーバーを動かすにはデータベースのマイグレーションを事前に行う必要があります。手動でデータベースのマイグレーションを行う場合は、次のコマンドを実行します（環境変数の `AUTO_MIGRATION` を有効化している場合はこの作業は必要ありません）。
 
