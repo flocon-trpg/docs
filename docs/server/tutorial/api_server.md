@@ -205,11 +205,40 @@ API サーバーの設定をします。設定には環境変数を用います�
 - `fly.toml`に記述する
 - `flyctl secrets set`コマンドを利用する
 
-どちらを使っても動作自体に支障はありませんが、fly.io では [慎重に扱うべき値は`flyctl secrets set`を使うことを推奨しています](https://fly.io/docs/reference/secrets/)。このチュートリアルでも、漏洩しても比較的大きな問題にならないと考えられる値は`fly.toml`を、そうでない値は`flyctl secrets set`を用いています。
+どちらを使っても動作自体に支障はありませんが、fly.io では [慎重に扱うべき値は`flyctl secrets set`を使うことを推奨しています](https://fly.io/docs/reference/secrets/)。ただし、このチュートリアルで扱う値は、すべて`fly.toml`で設定して構いません[^4]。
 
 #### fly.toml ファイルを用いた設定方法
 
 `fly.toml` ファイルを開きます。例えば次のようになっているかと思います。`[env]`と`[[mounts]]`の間に設定を記述していきます。
+
+入力例は次のようになります。`[env]`と`[experimental]`の間の部分以外は編集前と変わっていません。なお、この入力例をそのまま用いるとエラーになりますのでご注意ください(`FIREBASE_PROJECT_ID` の部分を変える必要があります)。
+
+```txt
+# fly.toml file generated for flocon-api-tutorial-app on 2022-08-30T00:00:00+09:00
+
+app = "flocon-api-tutorial-app"
+kill_signal = "SIGINT"
+kill_timeout = 5
+processes = []
+
+[env]
+PORT="8080"
+AUTO_MIGRATION="true"
+FIREBASE_PROJECT_ID="my-firebase-project-id"
+DATABASE_URL="file:///data/main.sqlite3"
+ENTRY_PASSWORD='{"type":"none"}'
+NODE_ENV="production"
+
+[[mounts]]
+  source = "my_storage"
+  destination = "/data"
+
+[experimental]
+  allowed_public_ports = []
+  auto_rollback = true
+
+(以下略)
+```
 
 :::note
 `fly.toml` ファイルは、TOML という言語で記述します。そのため、.env ファイル(.env.local もこれに含まれます)とは文法が異なりますのでご注意ください。一例として、TOML の場合は`=`の右辺が文字列の場合は必ず`"`か`'`などで囲む必要があります。
@@ -245,11 +274,15 @@ const firebaseConfig = {
 };
 ```
 
-この文字列を`"`の部分を含めてコピーし、左に`FIREBASE_PROJECTID=`を付けます。例えば下のようになります。
+この文字列を`"`の部分を含めてコピーし、左に`FIREBASE_PROJECT_ID=`を付けます。例えば下のようになります。
 
 ```toml
-FIREBASE_PROJECTID="my-firebase-project-id"
+FIREBASE_PROJECT_ID="my-firebase-project-id"
 ```
+
+:::note
+API サーバー v0.7.10 では `FIREBASE_PROJECTID` のみが使用可能でしたが、v0.7.11 以降では代わりに `FIREBASE_PROJECT_ID` も使用できます。どちらを用いても同じ挙動となります。
+:::
 
 #### データベース
 
@@ -269,7 +302,15 @@ SQLite の代わりに PostgreSQL もしくは MySQL を使うこともできま
 
 #### ENTRY_PASSWORD
 
-[こちら](../details/api-server/vars#ENTRY_PASSWORD) を参照のうえ設定してください。
+サイトにアクセスする際にパスワードをかけることができます。パスワードは全員に共通ですので、パスワードを設定した場合は何らかの方法で利用者にパスワードをお伝えください。
+
+パスワードを設定しない場合は、次のようにします。
+
+```toml
+ENTRY_PASSWORD='{"type":"none"}'
+```
+
+パスワードを設定する場合は、[こちら](../details/api-server/vars#ENTRY_PASSWORD) を参照のうえ設定してください。
 
 #### NODE_ENV
 
@@ -279,36 +320,6 @@ SQLite の代わりに PostgreSQL もしくは MySQL を使うこともできま
 NODE_ENV="production"
 ```
 
-#### fly.toml ファイルの完成例
-
-このページにある設定を全て終えた場合、一例として、`fly.toml`の中身は次のようになります。`[env]`と`[experimental]`の間の部分以外は編集前と変わっていません。
-
-```txt
-# fly.toml file generated for flocon-api-tutorial-app on 2022-08-30T00:00:00+09:00
-
-app = "flocon-api-tutorial-app"
-kill_signal = "SIGINT"
-kill_timeout = 5
-processes = []
-
-[env]
-PORT="8080"
-AUTO_MIGRATION="true"
-FIREBASE_PROJECTID="my-firebase-project-id"
-DATABASE_URL="file:///data/main.sqlite3"
-ENTRY_PASSWORD='{"type":"none"}'
-NODE_ENV="production"
-
-[[mounts]]
-  source = "my_storage"
-  destination = "/data"
-
-[experimental]
-  allowed_public_ports = []
-  auto_rollback = true
-
-(以下略)
-```
 
 ## API サーバーをデプロイする
 
@@ -336,7 +347,7 @@ Apps 一覧が表示されるので、デプロイした app を選択します�
 
 ## API サーバーを再デプロイする方法
 
-設定などを変更した後、再度`flyctl deploy`コマンドを実行することで再デプロイできます。この方法で API サーバーのアップデートもできます。
+`fly.toml`や`Dockerfile`を変更した後、再度`flyctl deploy`コマンドを実行することで再デプロイできます。この方法で API サーバーのアップデートもできます。
 
 ## 次のステップに進む
 
@@ -349,4 +360,5 @@ Apps 一覧が表示されるので、デプロイした app を選択します�
 [^1]: PowerShell を推奨している理由は、flyctl のインストールには PowerShell が必要なのと、コマンドプロンプトでは cd コマンドでドライブをまたぐ場合は`/d`スイッチが必要であり説明が少し複雑になってしまうのを避けるためです。
 [^2]: 空でないフォルダに Dockerfile を置いても構いませんが、Dockerfile のある場所に他のファイルが自動的に作成されるので、Dockerfile 以外にファイルのないフォルダが管理しやすくなります。
 [^3]: 日本からの利用者が多い場合は、物理的な距離が近い`nrt (Tokyo, Japan)`を選ぶことで通信ラグが小さくなるため、わずかですがユーザー体験の向上が期待できます。ただし、[fly.io の料金表によると、アメリカにデプロイすると日本と比べてデータ転送の無料枠が大きく料金も安くなる](https://fly.io/docs/about/pricing/#outbound-data-transfer)といったメリットがあるため、通信量が多くなると予想される場合は`sea (Seattle, Wahington (US))`などといった北米西海岸のリージョンのほうが適しているかもしれません。また、API サーバーは Firebase Authentication によってユーザーの認証を確認するため、Firebase のリージョンも少なからず影響する可能性があります。なお、API サーバーは各ブラウザと通信しますが、Web サーバーとの通信は行いません。そのため、API サーバーは Web サーバーと近い地域にデプロイする必要はありません。
+[^4]: `ENTRY_PASSWORD` は、パスワードという点を考えると機密情報ですが、ユーザー全員で共有される文字列であることと、部屋ごとに別途パスワードをかけることもできることから、`fly.toml` で設定しても大きな問題にはなりにくいと考えられます。もし漏洩が大きな問題になりうるケースの場合は、bcrypt を利用したうえで、`flyctl secrets set` コマンドを利用してセットしてください。
 [^5]: この例では `/data/main.sqlite3` としていますが、永続ストレージ内にあり、なおかつ他のファイルと重複しない限り、他のパスを指定しても構いません。
