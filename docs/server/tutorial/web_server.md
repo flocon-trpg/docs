@@ -15,7 +15,7 @@ Netlify は、静的な Web サイトを無料で作成できるサービスで�
 
 選んだバージョンの下の方に`flocon_web_server.zip`のリンクがあるので、それをダウンロードしてファイルを展開します。
 
-解凍すると`out`という名前のフォルダが作成されます。その中に`env.txt`というテキストファイルがありますが、このファイルに Web サーバーの設定を記述する必要があります。[Web サーバー公式設定ツール](https://tools.flocon.app/web-server) を利用して、`env.txt`を編集してください。
+展開すると`out`という名前のフォルダが作成されます。その中に`env.txt`というテキストファイルがありますが、このファイルに Web サーバーの設定を記述する必要があります。[Web サーバー公式設定ツール](https://tools.flocon.app/web-server) を利用して、`env.txt`を編集してください。
 
 :::info
 Firebase Storage 版アップローダーを有効化する場合は、あわせて[こちらの解説](/docs/server/details/uploader/firebase_storage)から Firebase Storage の設定を行う必要があります。

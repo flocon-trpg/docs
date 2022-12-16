@@ -35,7 +35,7 @@ function HomepageHeader() {
           <Link
             style={{ margin: "6px 12px" }}
             className="button button--secondary button--lg"
-            href="https://server1.flocon.app/"
+            href="https://try.flocon.app/"
             target="_blank"
             rel="noopener noreferrer"
           >

@@ -11,19 +11,13 @@ sidebar_position: 3
 Heroku もしくは他の方法で設置する場合は、[こちら](/docs/server/details/api-server) をご覧ください。
 :::
 
-:::info
-fly.ioではPostgreSQLが使えるため、Heroku Postgresからfly.ioへのデータ移行もできる可能性がありますが、現時点では未検証です。この解説では、Herokuからの移行ではなくサーバーを新規に設置する方法を紹介しています。
-
-なお、PostgreSQLのデータ移行の有無にかかわらず、Firebaseで管理されているデータは保持されます。
-:::
-
 ## fly.io とは
 
 fly.io は、クラウド上にサーバーを設置できるサービスです。fly.io には永続的に使える無料枠があり、これを利用することで無料で API サーバーを設置できます。
 
 ## シェルについて
 
-API サーバーの設置は、シェルで操作する必要があります。macOS ではターミナルなどが該当します。Windows にはコマンドプロンプトや PowerShell などがありますが、API サーバーの設置に用いる際はコマンドプロンプトよりは PowerShell を推奨します[^1]。Linux ユーザーの場合はおそらく説明は不要でしょう。
+API サーバーの設置は、CLI から操作する必要があります。macOS ではターミナルなどを用います。Windows にはコマンドプロンプトや PowerShell などがありますが、API サーバーの設置に用いる際は PowerShell のほうを推奨します[^1]。Linux ユーザーの場合はおそらく説明は不要でしょう。
 
 ## flyctl のインストール
 
@@ -105,7 +99,7 @@ flyctl auth login
 
 ### flyctl launch
 
-シェルで、`Dockerfile` のあるフォルダに移動します。フォルダの移動は cd コマンドなどを用います。例えば `Dockerfile` が `C:/aaa/bbb` にある場合は、`cd C:/aaa/bbb` と入力して Enter キーを押すことで移動できます。
+`Dockerfile` のあるフォルダに移動します。フォルダの移動は cd コマンドなどを用います。例えば `Dockerfile` が `C:/aaa/bbb` にある場合は、`cd C:/aaa/bbb` と入力して Enter キーを押すことで移動できます。
 
 移動したら、次のコマンドを実行して、デプロイの下準備を行います。
 
@@ -113,7 +107,7 @@ flyctl auth login
 flyctl launch
 ```
 
-:::tip
+:::info
 Windows で `Error name argument or flag must be specified when not running interactively` というメッセージが出る場合は、次のいずれかの方法で回避できます。
 
 - [Windows ターミナル](https://apps.microsoft.com/store/detail/windows-terminal/9N0DX20HK701) をインストールして、Windows ターミナルから PowerShell を起動して実行する。
@@ -160,7 +154,7 @@ processes = []
   allowed_public_ports = []
   auto_rollback = true
 
-#(以下略)
+(以下略)
 ```
 
 次の文字列を入力します。`my_storage`以外の名前にしている場合は、適宜置き換えてください。入力する場所がわからない場合は、`[env]`と`[experimental]`の間に入力すれば大丈夫です。
@@ -195,7 +189,7 @@ processes = []
   allowed_public_ports = []
   auto_rollback = true
 
-#(以下略)
+(以下略)
 ```
 
 ### 環境変数の設定
@@ -304,13 +298,17 @@ SQLite の代わりに PostgreSQL もしくは MySQL を使うこともできま
 
 サイトにアクセスする際にパスワードをかけることができます。パスワードは全員に共通ですので、パスワードを設定した場合は何らかの方法で利用者にパスワードをお伝えください。
 
-パスワードを設定しない場合は、次のようにします。
+共通パスワードを設定しない場合は、次のようにします。
 
 ```toml
 ENTRY_PASSWORD='{"type":"none"}'
 ```
 
-パスワードを設定する場合は、[こちら](../details/api-server/vars#ENTRY_PASSWORD) を参照のうえ設定してください。
+共通パスワードを設定する場合は、[こちら](../details/api-server/vars#ENTRY_PASSWORD) を参照のうえ設定してください。
+
+:::tip
+共通パスワードとは別に、部屋ごとにパスワードをかけることもできます。そのため、共通パスワードを設定しなくても部屋への入室を制限することは可能です。
+:::
 
 #### NODE_ENV
 

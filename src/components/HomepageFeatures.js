@@ -118,7 +118,7 @@ export default function HomepageFeatures() {
           <h2>公式サーバー</h2>
           <div>
             <a
-              href="https://server1.flocon.app/"
+              href="https://try.flocon.app/"
               target="_blank"
               rel="noopener noreferrer"
             >

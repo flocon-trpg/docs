@@ -3,28 +3,11 @@ title: "静的ファイルを生成して設置"
 sidebar_position: 2
 ---
 
-[リリース一覧](https://github.com/flocon-trpg/servers/releases)にある`web-server-static.zip`に相当するファイルを生成する方法についての解説です。この解説の方法を用いることで、静的ファイルに環境変数などのデータを静的ファイルに埋め込むなどといった機能を使うことができますが、基本的には`web-server-static.zip`を使用するほうが簡単であるためそちらを推奨します。
+[リリース一覧](https://github.com/flocon-trpg/servers/releases)にある`flocon_web_server.zip`[^1] に相当するファイルを生成する方法についての解説です。この解説の方法を用いることで、静的ファイルに環境変数などのデータを埋め込むなどといった機能を使うことができますが、基本的には`flocon_web_server.zip`を使用するほうが簡単であるためそちらを推奨します。
 
 ## ビルド方法
 
-Node.js の v16 もしくは v14 がインストールされていない場合はインストールしてください。npm もあわせてインストールしてください（通常は Node.js と一緒にインストールされます）。
-
-Node.js と npm のバージョンは次のコマンドで確認できます。
-
-```bash
-$ node --version
-$ npm --version
-```
-
-:::note
-コマンドを実行する際は、$の文字は入力しないでください。
-:::
-
-yarn がインストールされていない場合は、次のコマンドを実行して yarn をインストールします。
-
-```bash
-$ npm install -g yarn
-```
+まず、Node.js の [LTS もしくは Maintenance](https://github.com/nodejs/Release#release-schedule) に該当するバージョンと、yarn をインストールしてください。
 
 :::note
 Flocon は npm や pnpm には対応していないため、yarn は必須です。
@@ -71,21 +54,13 @@ $ yarn run export
 ```
 
 :::info
-`yarn run build`を実行したときに`MODULE_NOT_FOUND`というエラーが出る場合は、パスに全角文字などが含まれていないかどうか確認してください。
-:::
-
-:::info
 パスに全角文字が含まれる状態で`yarn workspaces focus`などを実行していた場合、`yarn run build`を実行すると`The command failed for workspaces that are depended upon by other workspaces; can't satisfy the dependency graph`というエラーが出て失敗することがあります。この場合は、パスに全角文字を含まないようにしてから`servers`フォルダにある`node_modules`フォルダを削除して、`yarn workspaces focus`を実行するところからやり直してください。
 :::
 
-:::note
-`yarn run build`を実行すると`ESLint must be installed in order to run during builds: yarn add --dev eslint`というエラーが出ますが、無視して構いません。
-:::
-
-最終的に`out`フォルダが生成されます。この中には HTML ファイル、画像ファイル、JavaScript ファイルなどといった静的ファイルが入っています。これをホスティングサービスなどにアップロードすることで Web サーバーの設置が完了します。
+`out`フォルダが生成されます。この中には HTML ファイル、画像ファイル、JavaScript ファイルなどといった静的ファイルが入っています。これをオンプレミスサーバーで利用するかホスティングサービス(Netlify や Firebase Hosting など様々なものがあります)などにアップロードすることで Web サーバーの設置が完了します。
 
 :::caution
 生成された`out`フォルダと`.next`フォルダ内のファイルには、一部の環境変数や `.env.local`ファイルのデータが埋め込まれています。そのため、これらのファイルを第三者と共有することは推奨されません。
 :::
 
-静的ファイルをアップロードするホスティングサービスは Netlify や Firebase Hosting など様々なものがありますので、いずれかの方法でデプロイしてください。
+[^1]: 古いバージョンでは `web-server-static.zip` という名前です。
